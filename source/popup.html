@@ -1,0 +1,57 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+
+<head>
+  <title>Getting Started Extension's Popup</title>
+  <style type="text/css">
+    body {
+      margin: 10px;
+      white-space: nowrap;
+    }
+
+    #container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 15px;
+    }
+
+    #count {
+      color: black;
+      font-style: italic;
+    }
+
+  </style>
+
+  <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+    -->
+  <script src="popup.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <h1>Magnet Links:</h1>
+    <button type="button" id="copyButton">Copy to Clipboard</button>
+  </div>
+
+  <textarea rows="8" cols="50" id="resultArea">
+      No links found.
+  </textarea>
+
+  <p id="count"></p>
+
+</body>
+
+</html>
