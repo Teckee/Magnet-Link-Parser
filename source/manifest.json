@@ -17,5 +17,6 @@
     "activeTab",
     "storage",
     "tabs"
-  ]
+  ],
+  "content_security_policy": "script-src 'self' https://cnbtkitty.xyz/; object-src 'self'"
 }

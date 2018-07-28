@@ -5,19 +5,48 @@
 chrome.runtime.onMessage.addListener(function (request, sender) {
   if (request.action == "getSource") {
     var pageSource = request.source;
-    var pattern = /"(magnet.*?)"/g;
-    var result = pageSource.match(pattern);
+    var pattern = /href="([^[]*?)#magnetlink"/g;
+    var urls = pageSource.match(pattern);
 
-    if (result.length > 0) {
-      result = result.map(function (el) { return el.replace(/^"|"$/g, ""); });
+    if (urls.length > 0) {
+      urls = urls.map(function (element) { return element.replace(/href="/g, "https:"); });
     }
-    document.getElementById("resultArea").innerHTML = result.join("\n\n");
 
-    if (result.length > 0) {
-      document.getElementById("count").innerHTML = '<b>' + result.length + '</b>' + " magnet links found";
+    if (urls.length > 0) {
+      var magnetLink = new Array();
+
+      urls.forEach(element => {
+        magnetLink.push(parseMagnetLinks(element));
+      });
+
+      document.getElementById("resultArea").innerHTML = magnetLink.join("\n\n");
+      document.getElementById("count").innerHTML = '<b>' + magnetLink.length + '</b>' + " magnet links found";
+    } else {
+      document.getElementById("count").innerHTML = "No magnet links found";
     }
   }
 });
+
+function parseMagnetLinks(url) {
+  var magnetLink = "";
+
+  $.ajax({
+    url: url,
+    type: 'GET',
+    crossDomain: true,
+    async: false, 
+    success: function(data) {
+      var pattern = /magnet:([^>]*?)<\/a>/g;
+      var result = data.match(pattern);
+      if (result != null && result.length > 0) {
+        magnetLink = result[0].replace(/<\/a>/g, "");
+      }
+    },
+    error: function() { alert('Something wrong when request' + " " + url); }
+  });
+
+  return magnetLink;
+}
 
 function onWindowLoad() {
   var message = document.querySelector('#message');
